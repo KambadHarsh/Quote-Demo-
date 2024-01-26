@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Quote Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+    </header>
+
+    <main>
+        <div class="quote-container">
+            <div class="controls">
+                <select name="author" id="author"></select>
+                <div class="colors">
+                    <button id="redBtn"></button>
+                    <button id="blueBtn"></button>
+                    <button id="greenBtn"></button>
+                    <button id="yellowBtn"></button>
+                    <button id="purpleBtn"></button>
+                </div>
+            </div>
+            <p class="quote content" id="content">This is a sample quote.
+            </p>
+            
+            <button id="generate">Generate New Quote</button>
+            <button id="download">Download as Image</button>
+
+        </div>
+    </main>
+
+    
+
+    <script src="script.js"></script>
+    <script>
+        var qoutes;
+        async function getQoutes() {
+            var rawResponse = await fetch('https://api.quotable.io/quotes?tags=happiness');
+            var response = await rawResponse.json()
+            console.log(response)
+            qoutes = response
+            if (qoutes.results) {
+                var authors = [...new Set(qoutes.results.map(qoute => qoute.author))]
+                var qouteContent = qoutes.results[0];
+                var qouteContentHtml = document.getElementById('content');
+                var qouteContentAuthorHtml = document.createElement('span') 
+                qouteContentHtml.textContent = qouteContent.content;
+                qouteContentAuthorHtml.className = "qoute-author";
+                qouteContentAuthorHtml.textContent = "- "+qouteContent.author; 
+                qouteContentHtml.appendChild(qouteContentAuthorHtml)
+                var authorHtml = document.getElementById('author')
+                console.log(authorHtml)
+                document.getElementById('generate').onclick = function(){
+                    var index = getRandom(0,qoutes.results.length)
+                    console.log(index,qoutes.results)
+                    let randomQoute = qoutes.results[index]
+ 
+                var randomQouteContentAuthorHtml = document.createElement('span') 
+                qouteContentHtml.textContent = randomQoute.content;
+                randomQouteContentAuthorHtml.className = "qoute-author";
+                randomQouteContentAuthorHtml.textContent = "- "+randomQoute.author; 
+                qouteContentHtml.appendChild(randomQouteContentAuthorHtml)
+                }
+                authors.forEach(element => {
+                    var option = document.createElement("option")
+                    option.value = element
+                    option.text = element
+                    authorHtml.appendChild(option)
+                });
+                console.log(authors)
+                
+                 // change color on click 
+
+               var redcolor = document.getElementById('redBtn');
+
+               redcolor.addEventListener('click', function onClick() {
+                qouteContentHtml.style.color= 'red';
+
+                });
+
+                // blue
+                var bluecolor = document.getElementById('blueBtn');
+
+               bluecolor.addEventListener('click', function onClick() {
+                qouteContentHtml.style.color= 'blue';
+                });
+
+                // green
+                var greencolor = document.getElementById('greenBtn');
+
+               greencolor.addEventListener('click', function onClick() {
+                qouteContentHtml.style.color= 'green';
+                });
+
+                var yellowcolor = document.getElementById('yellowBtn');
+
+                // yellow 
+               yellowcolor.addEventListener('click', function onClick() {
+                qouteContentHtml.style.color= 'yellow';
+                });
+
+            //    purple 
+                var purplecolor = document.getElementById('purpleBtn');
+
+               purplecolor.addEventListener('click', function onClick() {
+                qouteContentHtml.style.color= 'purple';
+                });
+
+
+
+
+
+                
+            }
+
+        }
+        getQoutes()
+        
+        
+        function getRandom(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+}
+
+      
+
+
+
+    </script>
+</body>
+
+</html>
